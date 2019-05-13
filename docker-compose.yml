@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  web:
+    build: app
+    restart: always
+    stdin_open: true
+    command: python manage.py runserver 0.0.0.0:8001
+    working_dir: /src/blakid
+    depends_on:
+      - db
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./src:/src
+    environment:
+      - PATH=/root/local/bin:$PATH
+      - DOCKER_INTERNAL_IP=172.18.0.1
+
+  db:
+    image: postgres:11.3
+    restart: always
+    volumes:
+      - ./volumes/database/postgres:/postgresql/data:z
+    environment:
+      - POSTGRES_USER=petur
+      - POSTGRES_DB=petur
+      - PGDATA=/postgresql/data
